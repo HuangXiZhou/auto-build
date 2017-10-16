@@ -1,37 +1,28 @@
-var http = require('http');
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 var spawn = require('child_process').spawn;
-var createHandler = require('github-webhook-handler');
-// 下面填写的myscrect跟github webhooks配置一样，下一步会说；path是我们访问的路径
-var handler = createHandler({ path: '/pushCode', secret: 'HUANGXZ961114' });
-http.createServer(function (req, res) {
-  handler(req, res, function (err) {
-    res.statusCode = 404;
-    res.end('no such location');
-  })
-}).listen(3000);
-handler.on('error', function (err) {
-  console.error('Error:', err.message)
+app.use(bodyParser.json());
+
+app.post('/pushcode', function (req, res) {
+  if(req.body.password == 'HUANGXZ961114' && req.body.hook_name == 'push_hooks' && req.body.ref == 'refs/heads/master'){
+    rumCommand('sh', ['./autoBuild.sh'], txt => {
+      console.log(txt)
+    })
+  }
 });
-// 监听到push事件的时候执行我们的自动化脚本
-handler.on('push', function (event) {
-  console.log('Received a push event for %s to %s',
-    event.payload.repository.name,
-    event.payload.ref);
-  rumCommand('sh', ['./autoBuild.sh'], function( txt ){
-    console.log(txt);
-  });
-});
-function rumCommand( cmd, args, callback ){
-    var child = spawn( cmd, args );
-    var response = '';
-    child.stdout.on('data', function( buffer ){ resp += buffer.toString(); });
-    child.stdout.on('end', function(){ callback( resp ) });
+
+const rumCommand = (cmd, args, callback) => {
+  const child = spawn(cmd, args)
+  let response = ''
+  child.stdout.on('data', buffer => response += buffer.toString())
+  child.stdout.on('end', () => callback(response))
 }
-// 由于我们不需要监听issues，所以下面代码注释掉
-//  handler.on('issues', function (event) {
-//    console.log('Received an issue event for %s action=%s: #%d %s',
-//      event.payload.repository.name,
-//      event.payload.action,
-//      event.payload.issue.number,
-//      event.payload.issue.title)
-// });
+
+
+var server = app.listen(3000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});
