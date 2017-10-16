@@ -1,4 +1,5 @@
 #! /bin/bash
-git pull origin master
-npm i
+git reset --hard origin/master
+git clean -f
+git pull
 npm start
