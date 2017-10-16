@@ -6,7 +6,8 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "~1.18.2",
+    "body-parser": "^1.18.2",
+    "child_process": "^1.0.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
