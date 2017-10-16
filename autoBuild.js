@@ -6,7 +6,7 @@ app.use(bodyParser.json());
 
 app.post('/pushcode', function (req, res) {
   if(req.body.password == '123456' && req.body.hook_name == 'push_hooks' && req.body.ref == 'refs/heads/master'){
-    rumCommand('sh', ['./auto_build.sh'], txt => {
+    rumCommand('sh', ['./autoBuild.sh'], txt => {
       console.log(txt)
     })
   }
