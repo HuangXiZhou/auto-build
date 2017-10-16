@@ -4,7 +4,7 @@ var app = express();
 var spawn = require('child_process').spawn;
 app.use(bodyParser.json());
 
-app.post('/', function (req, res) {
+app.post('/pushcode', function (req, res) {
   if(req.body.password == '123456' && req.body.hook_name == 'push_hooks' && req.body.ref == 'refs/heads/master'){
     rumCommand('sh', ['./auto_build.sh'], txt => {
       console.log(txt)
