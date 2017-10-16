@@ -1,4 +1,4 @@
 #! /bin/bash
-git pull
+git pull origin master
 npm install
 npm start
